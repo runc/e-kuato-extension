@@ -1,0 +1,79 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg width="128" height="128" viewBox="0 0 128 128" xmlns="http://www.w3.org/2000/svg">
+  <defs>
+    <!-- 渐变定义 -->
+    <linearGradient id="mainGradient" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" style="stop-color:#4F46E5;stop-opacity:1" />
+      <stop offset="100%" style="stop-color:#7C3AED;stop-opacity:1" />
+    </linearGradient>
+    
+    <linearGradient id="accentGradient" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" style="stop-color:#06B6D4;stop-opacity:1" />
+      <stop offset="100%" style="stop-color:#0891B2;stop-opacity:1" />
+    </linearGradient>
+    
+    <!-- 阴影滤镜 -->
+    <filter id="shadow" x="-50%" y="-50%" width="200%" height="200%">
+      <feDropShadow dx="2" dy="2" stdDeviation="3" flood-color="#000000" flood-opacity="0.3"/>
+    </filter>
+  </defs>
+  
+  <!-- 背景圆形 -->
+  <circle cx="64" cy="64" r="60" fill="url(#mainGradient)" filter="url(#shadow)"/>
+  
+  <!-- 地球图标 - 代表跨境 -->
+  <g transform="translate(64, 64)">
+    <!-- 地球轮廓 -->
+    <circle cx="0" cy="0" r="35" fill="none" stroke="#FFFFFF" stroke-width="2" opacity="0.8"/>
+    
+    <!-- 经纬线 -->
+    <ellipse cx="0" cy="0" rx="35" ry="15" fill="none" stroke="#FFFFFF" stroke-width="1.5" opacity="0.6"/>
+    <ellipse cx="0" cy="0" rx="35" ry="25" fill="none" stroke="#FFFFFF" stroke-width="1.5" opacity="0.6"/>
+    <line x1="-35" y1="0" x2="35" y2="0" stroke="#FFFFFF" stroke-width="1.5" opacity="0.6"/>
+    <line x1="0" y1="-35" x2="0" y2="35" stroke="#FFFFFF" stroke-width="1.5" opacity="0.6"/>
+    
+    <!-- 大陆轮廓 -->
+    <path d="M -20 -15 Q -10 -20 0 -15 Q 10 -10 20 -15 Q 15 -5 10 0 Q 5 5 0 10 Q -5 5 -10 0 Q -15 -5 -20 -15 Z" 
+          fill="#FFFFFF" opacity="0.3"/>
+  </g>
+  
+  <!-- 数据流动效果 - 代表采集 -->
+  <g transform="translate(64, 64)">
+    <!-- 数据点 -->
+    <circle cx="-25" cy="-20" r="3" fill="url(#accentGradient)">
+      <animate attributeName="opacity" values="0.3;1;0.3" dur="2s" repeatCount="indefinite"/>
+    </circle>
+    <circle cx="25" cy="-15" r="3" fill="url(#accentGradient)">
+      <animate attributeName="opacity" values="1;0.3;1" dur="2s" repeatCount="indefinite"/>
+    </circle>
+    <circle cx="-20" cy="25" r="3" fill="url(#accentGradient)">
+      <animate attributeName="opacity" values="0.3;1;0.3" dur="2s" repeatCount="indefinite" begin="0.5s"/>
+    </circle>
+    <circle cx="20" cy="20" r="3" fill="url(#accentGradient)">
+      <animate attributeName="opacity" values="1;0.3;1" dur="2s" repeatCount="indefinite" begin="1s"/>
+    </circle>
+    
+    <!-- 连接线 -->
+    <path d="M -25 -20 Q 0 -30 25 -15" fill="none" stroke="url(#accentGradient)" stroke-width="2" opacity="0.6">
+      <animate attributeName="stroke-dasharray" values="0,100;50,50;100,0" dur="3s" repeatCount="indefinite"/>
+    </path>
+    <path d="M -20 25 Q 0 30 20 20" fill="none" stroke="url(#accentGradient)" stroke-width="2" opacity="0.6">
+      <animate attributeName="stroke-dasharray" values="100,0;50,50;0,100" dur="3s" repeatCount="indefinite"/>
+    </path>
+  </g>
+  
+  <!-- 中心采集图标 -->
+  <g transform="translate(64, 64)">
+    <!-- 采集器主体 -->
+    <rect x="-8" y="-8" width="16" height="16" rx="2" fill="#FFFFFF" opacity="0.9"/>
+    
+    <!-- 采集箭头 -->
+    <path d="M -4 -2 L 0 2 L 4 -2" fill="none" stroke="url(#mainGradient)" stroke-width="2" stroke-linecap="round"/>
+    <path d="M -4 2 L 0 6 L 4 2" fill="none" stroke="url(#mainGradient)" stroke-width="2" stroke-linecap="round"/>
+  </g>
+  
+  <!-- 品牌标识 "E" -->
+  <g transform="translate(64, 100)">
+    <text x="0" y="0" text-anchor="middle" font-family="Arial, sans-serif" font-size="16" font-weight="bold" fill="#FFFFFF" opacity="0.9">E</text>
+  </g>
+</svg>

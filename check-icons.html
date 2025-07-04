@@ -1,0 +1,206 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>E-KUATO 图标状态检查</title>
+    <style>
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            margin: 0;
+            padding: 20px;
+            min-height: 100vh;
+        }
+        
+        .container {
+            max-width: 900px;
+            margin: 0 auto;
+            background: rgba(255, 255, 255, 0.95);
+            border-radius: 20px;
+            padding: 40px;
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.1);
+        }
+        
+        h1 {
+            text-align: center;
+            color: #333;
+            margin-bottom: 30px;
+        }
+        
+        .status-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 20px;
+            margin-bottom: 30px;
+        }
+        
+        .status-item {
+            padding: 20px;
+            background: #f8fafc;
+            border-radius: 15px;
+            border: 2px solid #e2e8f0;
+            text-align: center;
+        }
+        
+        .status-item.success {
+            border-color: #10b981;
+            background: #f0fdf4;
+        }
+        
+        .status-item.error {
+            border-color: #ef4444;
+            background: #fef2f2;
+        }
+        
+        .status-icon {
+            font-size: 2em;
+            margin-bottom: 10px;
+        }
+        
+        .status-title {
+            font-weight: bold;
+            margin-bottom: 10px;
+            color: #333;
+        }
+        
+        .status-desc {
+            color: #666;
+            font-size: 0.9em;
+        }
+        
+        .manifest-preview {
+            background: #1f2937;
+            color: #f9fafb;
+            padding: 20px;
+            border-radius: 10px;
+            font-family: 'Courier New', monospace;
+            font-size: 0.9em;
+            overflow-x: auto;
+            margin-top: 20px;
+        }
+        
+        .highlight {
+            background: #374151;
+            padding: 2px 4px;
+            border-radius: 3px;
+        }
+        
+        .instructions {
+            background: #dbeafe;
+            border: 2px solid #3b82f6;
+            border-radius: 10px;
+            padding: 20px;
+            margin-top: 20px;
+        }
+        
+        .instructions h3 {
+            color: #1e40af;
+            margin-top: 0;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>🔍 E-KUATO 图标状态检查</h1>
+        
+        <div class="status-grid">
+            <div class="status-item" id="icon16-status">
+                <div class="status-icon">⏳</div>
+                <div class="status-title">icon-16.png</div>
+                <div class="status-desc">检查中...</div>
+                <div style="margin-top: 10px;">
+                    <img id="icon16-preview" width="32" height="32" style="display: none;">
+                </div>
+            </div>
+            
+            <div class="status-item" id="icon48-status">
+                <div class="status-icon">⏳</div>
+                <div class="status-title">icon-48.png</div>
+                <div class="status-desc">检查中...</div>
+                <div style="margin-top: 10px;">
+                    <img id="icon48-preview" width="48" height="48" style="display: none;">
+                </div>
+            </div>
+            
+            <div class="status-item" id="icon128-status">
+                <div class="status-icon">⏳</div>
+                <div class="status-title">icon-128.png</div>
+                <div class="status-desc">检查中...</div>
+                <div style="margin-top: 10px;">
+                    <img id="icon128-preview" width="64" height="64" style="display: none;">
+                </div>
+            </div>
+        </div>
+        
+        <div class="instructions">
+            <h3>📋 当前配置状态</h3>
+            <p>您的 manifest.json 文件应该包含以下图标配置：</p>
+            
+            <div class="manifest-preview">
+{<br>
+  "manifest_version": 3,<br>
+  "name": "E-KUATO",<br>
+  "description": "跨境电商采集助手，商品采集就是这么轻松简单",<br>
+  "version": "1.2",<br>
+  <span class="highlight">"icons": {<br>
+    "16": "icon-16.png",<br>
+    "48": "icon-48.png",<br>
+    "128": "icon-128.png"<br>
+  },</span><br>
+  "action": {<br>
+    "default_title": "E-KUATO",<br>
+    <span class="highlight">"default_icon": {<br>
+      "16": "icon-16.png",<br>
+      "48": "icon-48.png",<br>
+      "128": "icon-128.png"<br>
+    },</span><br>
+    "default_popup": "popup.html"<br>
+  },<br>
+  ...<br>
+}
+            </div>
+            
+            <h4>🚀 下一步操作</h4>
+            <ol>
+                <li>确保所有图标文件都在项目根目录</li>
+                <li>在Chrome扩展管理页面重新加载插件</li>
+                <li>检查浏览器工具栏中的插件图标是否更新</li>
+                <li>在扩展管理页面确认图标显示正常</li>
+            </ol>
+        </div>
+    </div>
+
+    <script>
+        function checkIcon(size) {
+            const img = new Image();
+            const statusElement = document.getElementById(`icon${size}-status`);
+            const previewElement = document.getElementById(`icon${size}-preview`);
+            
+            img.onload = function() {
+                statusElement.className = 'status-item success';
+                statusElement.querySelector('.status-icon').textContent = '✅';
+                statusElement.querySelector('.status-desc').textContent = `${img.width}×${img.height} 像素 - 正常`;
+                
+                previewElement.src = img.src;
+                previewElement.style.display = 'block';
+            };
+            
+            img.onerror = function() {
+                statusElement.className = 'status-item error';
+                statusElement.querySelector('.status-icon').textContent = '❌';
+                statusElement.querySelector('.status-desc').textContent = '文件不存在或无法加载';
+            };
+            
+            img.src = `icon-${size}.png`;
+        }
+
+        // 页面加载时检查所有图标
+        window.onload = function() {
+            checkIcon(16);
+            checkIcon(48);
+            checkIcon(128);
+        };
+    </script>
+</body>
+</html>

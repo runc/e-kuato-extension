@@ -1,0 +1,46 @@
+{
+  "manifest_version": 3,
+  "name": "E-KUATO",
+  "description": "跨境电商采集助手，商品采集就是这么轻松简单",
+  "version": "1.2",
+  "icons": {
+    "16": "icon-16.png",
+    "48": "icon-48.png",
+    "128": "icon-128.png"
+  },
+  "action": {
+    "default_title": "E-KUATO",
+    "default_icon": {
+      "16": "icon-16.png",
+      "48": "icon-48.png",
+      "128": "icon-128.png"
+    },
+    "default_popup": "popup.html"
+  },
+  "background": {
+    "service_worker": "background.js"
+  },
+  "content_scripts": [
+    {
+      "matches": [
+        "<all_urls>"
+      ],
+      "js": [
+        "js/jquery-3.6.0.min.js",
+        "js/aliexpress.js",
+        "js/amazon.js",
+        "js/temu.js",
+        "js/shein.js",
+        "js/html2canvas.min.js"
+      ]
+    }
+  ],
+  "permissions": [
+    "contextMenus",
+    "tabs",
+    "notifications",
+    "webRequest",
+    "cookies",
+    "storage"
+  ]
+}

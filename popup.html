@@ -1,0 +1,355 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+  <meta charset="utf-8" />
+  <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>E-KUATO采集助手</title>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+  <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+  <style>
+    * {
+      box-sizing: border-box;
+    }
+
+    body {
+      margin: 0;
+      padding: 0;
+      font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+      width: 320px;
+      min-height: 400px;
+      color: #333;
+      font-size: 13px;
+      line-height: 1.5;
+      overflow-x: hidden;
+    }
+
+    .main-container {
+      background: rgba(255, 255, 255, 0.98);
+      backdrop-filter: blur(10px);
+      width: 100%;
+      height: 100%;
+      min-height: 400px;
+      padding: 20px;
+      box-sizing: border-box;
+    }
+
+    .header {
+      text-align: center;
+      margin-bottom: 20px;
+      padding-bottom: 16px;
+      border-bottom: 1px solid rgba(102, 126, 234, 0.1);
+    }
+
+    .logo {
+      width: 48px;
+      height: 48px;
+      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+      border-radius: 12px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      margin: 0 auto 12px;
+      box-shadow: 0 4px 12px rgba(102, 126, 234, 0.2);
+    }
+
+    .logo i {
+      color: white;
+      font-size: 20px;
+    }
+
+    .title {
+      font-size: 18px;
+      font-weight: 600;
+      color: #2d3748;
+      margin: 0 0 4px 0;
+      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+    }
+
+    .subtitle {
+      font-size: 12px;
+      color: #718096;
+      margin: 0;
+      font-weight: 400;
+    }
+
+    .form-section {
+      margin-bottom: 16px;
+    }
+
+    .form-group {
+      margin-bottom: 12px;
+    }
+
+    .form-label {
+      display: block;
+      font-size: 11px;
+      font-weight: 500;
+      color: #4a5568;
+      margin-bottom: 4px;
+    }
+
+    input,
+    select {
+      width: 100%;
+      padding: 8px 12px;
+      border: 1px solid #e2e8f0;
+      border-radius: 8px;
+      font-size: 12px;
+      font-family: inherit;
+      background-color: #fff;
+      transition: all 0.2s ease;
+      outline: none;
+      box-sizing: border-box;
+    }
+
+    input:focus,
+    select:focus {
+      border-color: #667eea;
+      box-shadow: 0 0 0 2px rgba(102, 126, 234, 0.1);
+    }
+
+    input::placeholder {
+      color: #a0aec0;
+      font-size: 11px;
+    }
+
+    select {
+      cursor: pointer;
+      background-image: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' fill='none' viewBox='0 0 20 20'%3e%3cpath stroke='%236b7280' stroke-linecap='round' stroke-linejoin='round' stroke-width='1.5' d='m6 8 4 4 4-4'/%3e%3c/svg%3e");
+      background-position: right 8px center;
+      background-repeat: no-repeat;
+      background-size: 12px;
+      padding-right: 28px;
+      appearance: none;
+    }
+
+    option {
+      color: #4a5568;
+      padding: 4px;
+    }
+
+    .btn {
+      width: 100%;
+      padding: 10px 16px;
+      border: none;
+      border-radius: 8px;
+      font-size: 12px;
+      font-weight: 600;
+      font-family: inherit;
+      cursor: pointer;
+      transition: all 0.2s ease;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 6px;
+      text-decoration: none;
+      margin-bottom: 8px;
+    }
+
+    .btn-primary {
+      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+      color: white;
+      box-shadow: 0 2px 8px rgba(102, 126, 234, 0.2);
+    }
+
+    .btn-primary:hover {
+      transform: translateY(-1px);
+      box-shadow: 0 4px 12px rgba(102, 126, 234, 0.3);
+    }
+
+    .btn-primary:active {
+      transform: translateY(0);
+    }
+
+    .links-section {
+      border-top: 1px solid #e2e8f0;
+      padding-top: 16px;
+      margin-top: 16px;
+    }
+
+    .link-item {
+      display: flex;
+      align-items: center;
+      padding: 10px 12px;
+      background: #f7fafc;
+      border-radius: 8px;
+      text-decoration: none;
+      color: #4a5568;
+      margin-bottom: 8px;
+      transition: all 0.2s ease;
+      border: 1px solid #e2e8f0;
+    }
+
+    .link-item:hover {
+      background: #edf2f7;
+      transform: translateY(-1px);
+      box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+      color: #667eea;
+    }
+
+    .link-item:last-child {
+      margin-bottom: 0;
+    }
+
+    .link-icon {
+      width: 32px;
+      height: 32px;
+      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+      border-radius: 8px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      margin-right: 10px;
+      flex-shrink: 0;
+    }
+
+    .link-icon i {
+      color: white;
+      font-size: 14px;
+    }
+
+    .link-content {
+      flex: 1;
+    }
+
+    .link-title {
+      font-weight: 600;
+      font-size: 12px;
+      margin: 0 0 2px 0;
+    }
+
+    .link-desc {
+      font-size: 10px;
+      color: #718096;
+      margin: 0;
+      line-height: 1.3;
+    }
+
+    .hidden {
+      display: none;
+    }
+
+    .external-link-icon {
+      color: #cbd5e0;
+      font-size: 10px;
+      margin-left: auto;
+    }
+
+    /* 滚动条样式 */
+    ::-webkit-scrollbar {
+      width: 4px;
+    }
+
+    ::-webkit-scrollbar-track {
+      background: transparent;
+    }
+
+    ::-webkit-scrollbar-thumb {
+      background: rgba(102, 126, 234, 0.3);
+      border-radius: 2px;
+    }
+
+    ::-webkit-scrollbar-thumb:hover {
+      background: rgba(102, 126, 234, 0.5);
+    }
+
+    .form-help {
+      font-size: 10px;
+      color: #718096;
+      margin-top: 4px;
+      line-height: 1.3;
+    }
+
+    .status-message {
+      margin-top: 12px;
+      padding: 8px 12px;
+      border-radius: 6px;
+      font-size: 11px;
+      font-weight: 500;
+      text-align: center;
+      display: none;
+    }
+
+    .status-message.success {
+      background-color: #f0fff4;
+      color: #38a169;
+      border: 1px solid #9ae6b4;
+    }
+
+    .status-message.error {
+      background-color: #fff5f5;
+      color: #e53e3e;
+      border: 1px solid #feb2b2;
+    }
+
+    .status-message.info {
+      background-color: #ebf8ff;
+      color: #3182ce;
+      border: 1px solid #90cdf4;
+    }
+  </style>
+</head>
+
+<body>
+  <div class="main-container">
+    <!-- Header Section -->
+    <div class="header">
+      <h1 class="title">E-KUATO</h1>
+      <p class="subtitle">智能商品采集助手</p>
+    </div>
+
+    <!-- Form Section - Identity Settings -->
+    <div class="form-section">
+      <div class="form-group">
+        <label class="form-label" for="scrape-key">
+          <i class="fas fa-user"></i> 用户身份设置
+        </label>
+        <input type="text" placeholder="请输入您的身份标识" id="scrape-key" />
+        <div class="form-help">此身份将应用于所有网站的采集操作</div>
+      </div>
+
+      <button class="btn btn-primary" id="saveIdentity">
+        <i class="fas fa-save"></i>
+        保存身份设置
+      </button>
+
+      <div class="status-message" id="statusMessage"></div>
+    </div>
+
+    <!-- Links Section -->
+    <div class="links-section">
+      <a href="https://space.bilibili.com/483589548" target="_blank" class="link-item">
+        <div class="link-icon">
+          <i class="fab fa-bilibili"></i>
+        </div>
+        <div class="link-content">
+          <div class="link-title">B站教学频道</div>
+          <div class="link-desc">观看详细使用教程和技巧分享</div>
+        </div>
+        <i class="fas fa-external-link-alt external-link-icon"></i>
+      </a>
+
+      <a href="https://k8i7sk88bq.feishu.cn/wiki/N4LjwLo0iisMuWkS3qEcwOven1e?from=from_copylink" target="_blank"
+        class="link-item">
+        <div class="link-icon">
+          <i class="fas fa-book"></i>
+        </div>
+        <div class="link-content">
+          <div class="link-title">飞书知识库</div>
+          <div class="link-desc">查看完整文档和常见问题解答</div>
+        </div>
+        <i class="fas fa-external-link-alt external-link-icon"></i>
+      </a>
+    </div>
+  </div>
+</body>
+<script type="text/javascript" src="js/jquery-3.6.0.min.js"></script>
+<script type="text/javascript" src="js/popup.js"></script>
+
+</html>

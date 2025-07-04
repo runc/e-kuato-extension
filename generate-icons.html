@@ -1,0 +1,243 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>图标生成器 - E-KUATO</title>
+    <style>
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            margin: 0;
+            padding: 20px;
+            min-height: 100vh;
+        }
+
+        .container {
+            max-width: 800px;
+            margin: 0 auto;
+            background: rgba(255, 255, 255, 0.95);
+            border-radius: 20px;
+            padding: 40px;
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.1);
+        }
+
+        h1 {
+            text-align: center;
+            color: #333;
+            margin-bottom: 30px;
+        }
+
+        .generator-section {
+            margin-bottom: 30px;
+            padding: 20px;
+            background: #f8fafc;
+            border-radius: 15px;
+            border: 2px solid #e2e8f0;
+        }
+
+        .preview-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 20px;
+            margin: 20px 0;
+        }
+
+        .preview-item {
+            text-align: center;
+            padding: 20px;
+            background: white;
+            border-radius: 10px;
+            border: 2px solid #e2e8f0;
+        }
+
+        .preview-item h3 {
+            margin: 10px 0;
+            color: #4F46E5;
+        }
+
+        .download-btn {
+            background: linear-gradient(135deg, #4F46E5, #7C3AED);
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 8px;
+            cursor: pointer;
+            font-weight: bold;
+            transition: transform 0.2s;
+        }
+
+        .download-btn:hover {
+            transform: translateY(-2px);
+        }
+
+        .instructions {
+            background: #fef3c7;
+            border: 2px solid #f59e0b;
+            border-radius: 10px;
+            padding: 20px;
+            margin-top: 20px;
+        }
+
+        .instructions h3 {
+            color: #92400e;
+            margin-top: 0;
+        }
+
+        .instructions ol {
+            color: #92400e;
+        }
+
+        canvas {
+            border: 2px solid #e2e8f0;
+            border-radius: 8px;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="container">
+        <h1>🎨 E-KUATO 图标生成器</h1>
+
+        <div class="generator-section">
+            <h2>📱 生成不同尺寸的PNG图标</h2>
+            <p>点击下面的按钮生成并下载对应尺寸的PNG图标文件：</p>
+
+            <div class="preview-grid">
+                <div class="preview-item">
+                    <canvas id="canvas16" width="16" height="16"></canvas>
+                    <h3>16×16</h3>
+                    <button class="download-btn" onclick="generateIcon(16)">下载 icon-16.png</button>
+                </div>
+
+                <div class="preview-item">
+                    <canvas id="canvas48" width="48" height="48"></canvas>
+                    <h3>48×48</h3>
+                    <button class="download-btn" onclick="generateIcon(48)">下载 icon-48.png</button>
+                </div>
+
+                <div class="preview-item">
+                    <canvas id="canvas128" width="128" height="128"></canvas>
+                    <h3>128×128</h3>
+                    <button class="download-btn" onclick="generateIcon(128)">下载 icon-128.png</button>
+                </div>
+            </div>
+        </div>
+
+        <div class="instructions">
+            <h3>📋 使用说明</h3>
+            <ol>
+                <li>点击上方对应尺寸的下载按钮</li>
+                <li>将下载的PNG文件放入您的插件项目根目录</li>
+                <li>确保manifest.json中的图标路径正确</li>
+                <li>重新加载浏览器插件即可看到新图标</li>
+            </ol>
+
+            <p><strong>注意：</strong>建议使用静态版本的图标，因为它在小尺寸下的清晰度更好。</p>
+        </div>
+    </div>
+
+    <script>
+        // SVG图标数据（静态版本）
+        const svgData = `
+        <svg width="128" height="128" viewBox="0 0 128 128" xmlns="http://www.w3.org/2000/svg">
+          <defs>
+            <linearGradient id="mainGradient" x1="0%" y1="0%" x2="100%" y2="100%">
+              <stop offset="0%" style="stop-color:#4F46E5;stop-opacity:1" />
+              <stop offset="100%" style="stop-color:#7C3AED;stop-opacity:1" />
+            </linearGradient>
+            <linearGradient id="accentGradient" x1="0%" y1="0%" x2="100%" y2="100%">
+              <stop offset="0%" style="stop-color:#06B6D4;stop-opacity:1" />
+              <stop offset="100%" style="stop-color:#0891B2;stop-opacity:1" />
+            </linearGradient>
+            <filter id="shadow" x="-50%" y="-50%" width="200%" height="200%">
+              <feDropShadow dx="2" dy="2" stdDeviation="4" flood-color="#000000" flood-opacity="0.25"/>
+            </filter>
+          </defs>
+          <circle cx="64" cy="64" r="58" fill="url(#mainGradient)" filter="url(#shadow)"/>
+          <circle cx="64" cy="64" r="50" fill="none" stroke="#FFFFFF" stroke-width="1" opacity="0.2"/>
+          <g transform="translate(64, 64)">
+            <circle cx="0" cy="0" r="32" fill="none" stroke="#FFFFFF" stroke-width="2.5" opacity="0.9"/>
+            <ellipse cx="0" cy="0" rx="32" ry="12" fill="none" stroke="#FFFFFF" stroke-width="1.5" opacity="0.7"/>
+            <ellipse cx="0" cy="0" rx="32" ry="22" fill="none" stroke="#FFFFFF" stroke-width="1.5" opacity="0.7"/>
+            <line x1="-32" y1="0" x2="32" y2="0" stroke="#FFFFFF" stroke-width="1.5" opacity="0.7"/>
+            <line x1="0" y1="-32" x2="0" y2="32" stroke="#FFFFFF" stroke-width="1.5" opacity="0.7"/>
+            <path d="M -18 -12 Q -8 -18 2 -12 Q 12 -8 18 -12 Q 15 -2 8 3 Q 3 8 -2 12 Q -8 8 -12 3 Q -15 -2 -18 -12 Z" fill="#FFFFFF" opacity="0.4"/>
+            <path d="M -25 15 Q -15 12 -5 15 Q 5 18 15 15 Q 12 22 5 25 Q -5 22 -15 25 Q -22 22 -25 15 Z" fill="#FFFFFF" opacity="0.3"/>
+          </g>
+          <g transform="translate(64, 64)">
+            <circle cx="-22" cy="-18" r="2.5" fill="url(#accentGradient)" opacity="0.9"/>
+            <circle cx="22" cy="-15" r="2.5" fill="url(#accentGradient)" opacity="0.9"/>
+            <circle cx="-18" cy="22" r="2.5" fill="url(#accentGradient)" opacity="0.9"/>
+            <circle cx="18" cy="20" r="2.5" fill="url(#accentGradient)" opacity="0.9"/>
+            <path d="M -22 -18 Q 0 -25 22 -15" fill="none" stroke="url(#accentGradient)" stroke-width="2" opacity="0.7" stroke-dasharray="3,2"/>
+            <path d="M -18 22 Q 0 28 18 20" fill="none" stroke="url(#accentGradient)" stroke-width="2" opacity="0.7" stroke-dasharray="3,2"/>
+            <path d="M -22 -18 Q -28 0 -18 22" fill="none" stroke="url(#accentGradient)" stroke-width="2" opacity="0.7" stroke-dasharray="3,2"/>
+            <path d="M 22 -15 Q 28 0 18 20" fill="none" stroke="url(#accentGradient)" stroke-width="2" opacity="0.7" stroke-dasharray="3,2"/>
+          </g>
+          <g transform="translate(64, 64)">
+            <circle cx="0" cy="0" r="10" fill="#FFFFFF" opacity="0.95"/>
+            <path d="M -3 -4 L 0 -1 L 3 -4" fill="none" stroke="url(#mainGradient)" stroke-width="2.5" stroke-linecap="round"/>
+            <path d="M -3 0 L 0 3 L 3 0" fill="none" stroke="url(#mainGradient)" stroke-width="2.5" stroke-linecap="round"/>
+            <path d="M -3 4 L 0 7 L 3 4" fill="none" stroke="url(#mainGradient)" stroke-width="2.5" stroke-linecap="round"/>
+          </g>
+          <g transform="translate(64, 105)">
+            <rect x="-12" y="-8" width="24" height="12" rx="6" fill="#FFFFFF" opacity="0.15"/>
+            <text x="0" y="2" text-anchor="middle" font-family="Arial, sans-serif" font-size="12" font-weight="bold" fill="#FFFFFF" opacity="0.9">EK</text>
+          </g>
+        </svg>`;
+
+        function generateIcon(size) {
+            const canvas = document.getElementById(`canvas${size}`);
+            const ctx = canvas.getContext('2d');
+
+            // 创建图像对象
+            const img = new Image();
+            const svgBlob = new Blob([svgData], { type: 'image/svg+xml' });
+            const url = URL.createObjectURL(svgBlob);
+
+            img.onload = function () {
+                // 清除画布
+                ctx.clearRect(0, 0, size, size);
+
+                // 绘制图像
+                ctx.drawImage(img, 0, 0, size, size);
+
+                // 创建下载链接
+                canvas.toBlob(function (blob) {
+                    const link = document.createElement('a');
+                    link.download = `icon-${size}.png`;
+                    link.href = URL.createObjectURL(blob);
+                    link.click();
+                    URL.revokeObjectURL(link.href);
+                });
+
+                URL.revokeObjectURL(url);
+            };
+
+            img.src = url;
+        }
+
+        // 页面加载时预览所有尺寸
+        window.onload = function () {
+            [16, 48, 128].forEach(size => {
+                const canvas = document.getElementById(`canvas${size}`);
+                const ctx = canvas.getContext('2d');
+
+                const img = new Image();
+                const svgBlob = new Blob([svgData], { type: 'image/svg+xml' });
+                const url = URL.createObjectURL(svgBlob);
+
+                img.onload = function () {
+                    ctx.drawImage(img, 0, 0, size, size);
+                    URL.revokeObjectURL(url);
+                };
+
+                img.src = url;
+            });
+        };
+    </script>
+</body>
+
+</html>

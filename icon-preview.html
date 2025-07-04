@@ -1,0 +1,265 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>E-KUATO 图标设计预览</title>
+    <style>
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            margin: 0;
+            padding: 20px;
+            min-height: 100vh;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            background: rgba(255, 255, 255, 0.95);
+            border-radius: 20px;
+            padding: 40px;
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.1);
+        }
+
+        h1 {
+            text-align: center;
+            color: #333;
+            margin-bottom: 10px;
+            font-size: 2.5em;
+        }
+
+        .subtitle {
+            text-align: center;
+            color: #666;
+            margin-bottom: 40px;
+            font-size: 1.2em;
+        }
+
+        .icon-section {
+            margin-bottom: 50px;
+        }
+
+        .icon-section h2 {
+            color: #4F46E5;
+            border-bottom: 3px solid #4F46E5;
+            padding-bottom: 10px;
+            margin-bottom: 30px;
+        }
+
+        .icon-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 30px;
+            margin-bottom: 30px;
+        }
+
+        .icon-item {
+            text-align: center;
+            padding: 20px;
+            background: #f8fafc;
+            border-radius: 15px;
+            border: 2px solid #e2e8f0;
+            transition: all 0.3s ease;
+        }
+
+        .icon-item:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1);
+            border-color: #4F46E5;
+        }
+
+        .icon-item h3 {
+            margin: 15px 0 10px 0;
+            color: #333;
+        }
+
+        .icon-item p {
+            color: #666;
+            font-size: 0.9em;
+            margin: 0;
+        }
+
+        .size-demo {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 20px;
+            margin: 20px 0;
+            padding: 20px;
+            background: #f1f5f9;
+            border-radius: 10px;
+        }
+
+        .size-demo .size-label {
+            font-weight: bold;
+            color: #475569;
+        }
+
+        .features {
+            background: #f8fafc;
+            padding: 30px;
+            border-radius: 15px;
+            margin-top: 40px;
+        }
+
+        .features h3 {
+            color: #4F46E5;
+            margin-bottom: 20px;
+        }
+
+        .features ul {
+            list-style: none;
+            padding: 0;
+        }
+
+        .features li {
+            padding: 8px 0;
+            color: #475569;
+            position: relative;
+            padding-left: 25px;
+        }
+
+        .features li:before {
+            content: "✓";
+            position: absolute;
+            left: 0;
+            color: #06B6D4;
+            font-weight: bold;
+        }
+
+        .color-palette {
+            display: flex;
+            gap: 15px;
+            margin: 20px 0;
+            flex-wrap: wrap;
+        }
+
+        .color-item {
+            text-align: center;
+            flex: 1;
+            min-width: 120px;
+        }
+
+        .color-swatch {
+            width: 60px;
+            height: 60px;
+            border-radius: 50%;
+            margin: 0 auto 10px;
+            border: 3px solid #fff;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+        }
+
+        .color-name {
+            font-size: 0.9em;
+            color: #475569;
+            font-weight: 500;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="container">
+        <h1>🌐 E-KUATO 跨境电商采集助手</h1>
+        <p class="subtitle">浏览器插件图标设计方案</p>
+
+        <div class="icon-section">
+            <h2>🎨 设计方案一：动态版本</h2>
+            <div class="icon-grid">
+                <div class="icon-item">
+                    <img src="icon-design.svg" width="128" height="128" alt="动态图标设计">
+                    <h3>动态效果版本</h3>
+                    <p>包含数据流动动画效果，适合网页展示</p>
+                </div>
+            </div>
+
+            <div class="size-demo">
+                <div>
+                    <div class="size-label">128px</div>
+                    <img src="icon-design.svg" width="128" height="128" alt="128px">
+                </div>
+                <div>
+                    <div class="size-label">48px</div>
+                    <img src="icon-design.svg" width="48" height="48" alt="48px">
+                </div>
+                <div>
+                    <div class="size-label">16px</div>
+                    <img src="icon-design.svg" width="16" height="16" alt="16px">
+                </div>
+            </div>
+        </div>
+
+        <div class="icon-section">
+            <h2>🎯 设计方案二：静态版本（推荐）</h2>
+            <div class="icon-grid">
+                <div class="icon-item">
+                    <img src="icon-static.svg" width="128" height="128" alt="静态图标设计">
+                    <h3>静态优化版本</h3>
+                    <p>适合浏览器插件使用，清晰度高，兼容性好</p>
+                </div>
+            </div>
+
+            <div class="size-demo">
+                <div>
+                    <div class="size-label">128px</div>
+                    <img src="icon-static.svg" width="128" height="128" alt="128px">
+                </div>
+                <div>
+                    <div class="size-label">48px</div>
+                    <img src="icon-static.svg" width="48" height="48" alt="48px">
+                </div>
+                <div>
+                    <div class="size-label">16px</div>
+                    <img src="icon-static.svg" width="16" height="16" alt="16px">
+                </div>
+            </div>
+        </div>
+
+        <div class="features">
+            <h3>🌟 设计特色</h3>
+            <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 30px;">
+                <div>
+                    <h4>设计理念</h4>
+                    <ul>
+                        <li>地球图标体现跨境电商的全球化特色</li>
+                        <li>数据节点和连接线表示数据采集功能</li>
+                        <li>中心采集器图标突出核心功能</li>
+                        <li>现代渐变色彩，符合科技感</li>
+                        <li>简洁清晰，在小尺寸下依然可识别</li>
+                    </ul>
+                </div>
+                <div>
+                    <h4>技术特点</h4>
+                    <ul>
+                        <li>SVG矢量格式，支持任意缩放</li>
+                        <li>渐变色彩，视觉效果丰富</li>
+                        <li>适配浏览器插件标准尺寸</li>
+                        <li>高对比度，确保可访问性</li>
+                        <li>兼容各种浏览器和操作系统</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+
+        <div class="icon-section">
+            <h2>🎨 配色方案</h2>
+            <div class="color-palette">
+                <div class="color-item">
+                    <div class="color-swatch" style="background: linear-gradient(135deg, #4F46E5, #7C3AED);"></div>
+                    <div class="color-name">主色调<br>紫蓝渐变</div>
+                </div>
+                <div class="color-item">
+                    <div class="color-swatch" style="background: linear-gradient(135deg, #06B6D4, #0891B2);"></div>
+                    <div class="color-name">强调色<br>青色渐变</div>
+                </div>
+                <div class="color-item">
+                    <div class="color-swatch" style="background: #FFFFFF;"></div>
+                    <div class="color-name">辅助色<br>纯白色</div>
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+
+</html>
