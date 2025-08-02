@@ -322,6 +322,47 @@
       <div class="status-message" id="statusMessage"></div>
     </div>
 
+    <!-- Collection Configuration Section -->
+    <div class="form-section">
+      <div class="form-group">
+        <label class="form-label">
+          <i class="fas fa-cog"></i> 采集配置
+        </label>
+
+        <div style="margin-bottom: 8px;">
+          <label style="font-size: 10px; color: #718096; margin-bottom: 2px; display: block;">时间范围</label>
+          <select id="time-range" style="margin-bottom: 0;">
+            <option value="2025" selected>2025年</option>
+            <option value="recent-2-years">最近两年</option>
+            <option value="unlimited">不限</option>
+          </select>
+        </div>
+
+        <div style="margin-bottom: 8px;">
+          <label style="font-size: 10px; color: #718096; margin-bottom: 2px; display: block;">选品评分检查</label>
+          <select id="product-rating-check" style="margin-bottom: 0;">
+            <option value="false" selected>否</option>
+            <option value="true">是</option>
+          </select>
+        </div>
+
+        <div style="margin-bottom: 8px;">
+          <label style="font-size: 10px; color: #718096; margin-bottom: 2px; display: block;">描述图为空检查</label>
+          <select id="description-image-check" style="margin-bottom: 0;">
+            <option value="false">否</option>
+            <option value="true" selected>是</option>
+          </select>
+        </div>
+      </div>
+
+      <button class="btn btn-primary" id="saveCollectionConfig">
+        <i class="fas fa-save"></i>
+        保存配置
+      </button>
+
+      <div class="status-message" id="collectionStatusMessage"></div>
+    </div>
+
     <!-- Links Section -->
     <div class="links-section">
       <a href="https://space.bilibili.com/483589548" target="_blank" class="link-item">

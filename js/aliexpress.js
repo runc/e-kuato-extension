@@ -28,7 +28,7 @@ window.addEventListener('unhandledrejection', (event) => {
 
 // 配置常量
 const CONFIG = {
-    API_BASE_URL: 'http://127.0.0.1:8012/api',
+    API_BASE_URL: 'http://127.0.0.1:8012/api/v1/open',
     POPUP_WIDTH: '320px',
     BRAND_COLOR: '#FD384F',
     Z_INDEX: 999999,
@@ -84,25 +84,9 @@ const PageUtils = {
                 return;
             }
         }
-
-        console.log('E-KUATO: 找到消息元素，显示消息');
-        console.log('E-KUATO: 消息元素当前状态:', {
-            length: messageEl.length,
-            isVisible: messageEl.is(':visible'),
-            display: messageEl.css('display'),
-            classes: messageEl.attr('class')
-        });
-
         messageEl.removeClass('success error warning info show')
             .addClass(type + ' show')
             .text(message);
-
-        console.log('E-KUATO: 消息元素设置后状态:', {
-            isVisible: messageEl.is(':visible'),
-            display: messageEl.css('display'),
-            classes: messageEl.attr('class'),
-            text: messageEl.text()
-        });
 
         setTimeout(() => {
             messageEl.fadeOut(() => {
@@ -112,8 +96,6 @@ const PageUtils = {
     },
 
     createGlobalMessage: function (message, type = 'info') {
-        console.log('E-KUATO: 创建全局消息提示');
-
         // 移除已存在的全局消息
         $('#ekuato-global-message').remove();
 
@@ -199,7 +181,6 @@ const PageUtils = {
 
         // 添加到页面
         $('body').append(globalMessage);
-
         // 3秒后自动消失
         setTimeout(() => {
             globalMessage.css('animation', 'ekuatoSlideOut 0.3s ease-in');
@@ -207,8 +188,6 @@ const PageUtils = {
                 globalMessage.remove();
             }, 300);
         }, 3000);
-
-        console.log('E-KUATO: 全局消息提示已显示');
     },
     scrollToLoadMore: function (callback) {
         const scrollHeight = document.body.scrollHeight * 3;
@@ -230,19 +209,13 @@ const PageUtils = {
 (function () {
     'use strict';
 
-    console.log('E-KUATO: 脚本开始加载');
-
     function initializeCollector() {
-        console.log('E-KUATO: 开始初始化采集器');
-
         if (typeof $ === 'undefined') {
-            console.error('E-KUATO: jQuery未加载，延迟初始化');
             setTimeout(initializeCollector, 500);
             return;
         }
 
         $(document).ready(function () {
-            console.log('E-KUATO: DOM就绪，创建采集器实例');
             const aliExpressCollector = new AliExpressCollector();
             aliExpressCollector.init();
         });
@@ -276,12 +249,6 @@ class AliExpressCollector {
             console.log('E-KUATO: 不是AliExpress页面，跳过初始化');
             return;
         }
-
-        console.log('E-KUATO: 是AliExpress页面，继续初始化');
-        console.log('E-KUATO: 是否为商品页面:', PageUtils.isItemPage(this.currentUrl));
-        console.log('E-KUATO: 是否为店铺页面:', PageUtils.isStorePage(this.currentUrl));
-        console.log('E-KUATO: 是否为搜索页面:', PageUtils.isSearchPage(this.currentUrl));
-
         this.createPopup();
         this.bindEvents();
         this.handleAutoMode();
@@ -289,21 +256,16 @@ class AliExpressCollector {
         // 添加全局调试函数
         window.ekuatoDebug = {
             testScrape: () => {
-                console.log('E-KUATO: 手动测试抓取功能');
                 this.handleScrape();
             },
             checkButton: () => {
                 const btn = $('#ekuato-scrape');
-                console.log('E-KUATO: 按钮存在:', btn.length > 0);
-                console.log('E-KUATO: 按钮元素:', btn[0]);
                 return btn;
             },
             rebindEvents: () => {
-                console.log('E-KUATO: 重新绑定事件');
                 this.bindButtonEvents();
             },
             testMessage: (message = '测试消息', type = 'info') => {
-                console.log('E-KUATO: 测试消息显示功能');
                 PageUtils.showMessage(message, type);
             },
             testAllMessages: () => {
@@ -329,16 +291,12 @@ class AliExpressCollector {
                 return { messageEl, popup };
             }
         };
-
-        console.log('E-KUATO: 初始化完成，可使用 window.ekuatoDebug 进行调试');
     }
 
     /**
      * 创建采集弹窗
      */
     createPopup() {
-        console.log('E-KUATO: 开始创建弹窗');
-
         // 检查是否已存在弹窗
         if ($('#ekuato-collector-popup').length > 0) {
             console.log('E-KUATO: 弹窗已存在，跳过创建');
@@ -353,13 +311,6 @@ class AliExpressCollector {
 
         $('body').append(this.popup);
         this.makePopupDraggable();
-
-        console.log('E-KUATO: 弹窗创建完成');
-        console.log('E-KUATO: 弹窗状态:', {
-            exists: $('#ekuato-collector-popup').length > 0,
-            isVisible: $('#ekuato-collector-popup').is(':visible'),
-            messageElExists: $('#ekuato-message').length > 0
-        });
 
         // 确保按钮存在后再绑定特定事件
         setTimeout(() => {
@@ -959,7 +910,7 @@ class AliExpressCollector {
         }
 
         try {
-            const result = await this.safeGetStorage(['scrapeKey']);
+            const result = await this.safeGetStorage(['scrapeKey', 'timeRange', 'productRatingCheck', 'descriptionImageCheck']);
             console.log('E-KUATO: 获取到的存储结果:', result);
 
             const selectedIdentity = result.scrapeKey;
@@ -968,6 +919,19 @@ class AliExpressCollector {
             if (!selectedIdentity) {
                 console.log('E-KUATO: 未设置身份标识');
                 PageUtils.showMessage('请在插件弹窗中设置身份标识', 'error');
+                return;
+            }
+
+            // 获取配置项，设置默认值
+            const timeRange = result.timeRange || '2025';
+            const productRatingCheck = result.productRatingCheck || 'false';
+            const descriptionImageCheck = result.descriptionImageCheck || 'false';
+
+            console.log('E-KUATO: 配置项:', { timeRange, productRatingCheck, descriptionImageCheck });
+
+            // 检查配置项并给出相应提示
+            const configChecks = await this.checkCollectionConfig(timeRange, productRatingCheck, descriptionImageCheck);
+            if (!configChecks.canProceed) {
                 return;
             }
 
@@ -993,18 +957,107 @@ class AliExpressCollector {
     }
 
     /**
+     * 检查采集配置
+     */
+    async checkCollectionConfig(timeRange, productRatingCheck, descriptionImageCheck) {
+
+        // 时间范围检查
+        if (timeRange === '2025') {
+            const currentYear = new Date().getFullYear();
+            if (currentYear !== 2025) {
+                const confirmMessage = `当前配置为仅采集2025年商品，但现在是${currentYear}年。是否继续采集？`;
+                if (!confirm(confirmMessage)) {
+                    PageUtils.showMessage('用户取消采集操作', 'info');
+                    return { canProceed: false };
+                }
+            }
+        } else if (timeRange === 'recent-2-years') {
+            const currentYear = new Date().getFullYear();
+            const confirmMessage = `当前配置为采集最近两年（${currentYear - 1}-${currentYear}）的商品。是否继续？`;
+            if (!confirm(confirmMessage)) {
+                PageUtils.showMessage('用户取消采集操作', 'info');
+                return { canProceed: false };
+            }
+        }
+
+        // 选品评分检查
+        if (productRatingCheck === 'true') {
+            const ratingScore = await this.showProductRatingDialog();
+            if (ratingScore === null) {
+                PageUtils.showMessage('用户取消评分，采集终止', 'info');
+                return { canProceed: false };
+            }
+            console.log('E-KUATO: 用户评分:', ratingScore);
+        }
+
+        // 描述图为空检查
+        if (descriptionImageCheck === 'true') {
+            const hasDescImages = this.checkDescriptionImages();
+            if (!hasDescImages) {
+                PageUtils.showMessage('检测到商品描述图片为空，无法抓取商品', 'error');
+                return { canProceed: false };
+            }
+        }
+
+        return { canProceed: true };
+    }
+
+    /**
+     * 显示商品评分对话框
+     */
+    async showProductRatingDialog() {
+        return new Promise((resolve) => {
+            const rating = prompt('请为此商品打分（1-10分，10分为最高）：');
+            if (rating === null) {
+                resolve(null); // 用户取消
+            } else {
+                const score = parseInt(rating);
+                if (isNaN(score) || score < 1 || score > 10) {
+                    alert('请输入1-10之间的有效数字');
+                    resolve(this.showProductRatingDialog()); // 递归重新询问
+                } else {
+                    resolve(score);
+                }
+            }
+        });
+    }
+
+    /**
+     * 检查商品描述图片是否为空
+     */
+    checkDescriptionImages() {
+        const productDetailImages = [];
+        $('div[id="nav-description"] img').each(function () {
+            const src = $(this).attr('src');
+            if (src) productDetailImages.push(src);
+        });
+        return productDetailImages.length > 0;
+    }
+
+    /**
      * 提取商品信息
      */
     extractProductInfo() {
         const productInfo = {};
-
         // 售价
-        const sellPriceText = $('.pdp-comp-price-current.product-price-value').text();
-        const sellPrice = PageUtils.cleanPrice(sellPriceText);
-
+        let sellPriceText = $('span[class*="price-default--current--"]').text();
+        let sellPrice = PageUtils.cleanPrice(sellPriceText);
+        if (!sellPrice) {
+            // 页面变更，尝试其他价格选择器
+            sellPriceText = $('.pdp-comp-price-current.product-price-value').text();
+            sellPrice = PageUtils.cleanPrice(sellPriceText);
+        }
         // 原价
-        const originPriceText = $('span[class*="price--originalText--"]').text();
+        let originPriceText = $('span[class*="price-default--original--"]').text();
+        if (!originPriceText) {
+            originPriceText = $('span[class*="price--originalText--"]').text();
+        }
         const originPrice = PageUtils.cleanPrice(originPriceText);
+        // 如果价格还是无法获取，弹窗提示
+        if (!sellPrice && !originPrice) {
+            PageUtils.showMessage('无法获取商品价格，请刷新页面重试', 'error');
+            return
+        }
 
         // 获取商品标题
         const productTitle = $('h1[data-pl="product-title"]').text().trim();
@@ -1109,19 +1162,19 @@ class AliExpressCollector {
      * 发送商品数据到服务器
      */
     sendProductData(template, identity, productInfo) {
-        console.log('E-KUATO: 开始发送商品数据到服务器');
+        // console.log('E-KUATO: 开始发送商品数据到服务器');
 
         const sendData = {
             template: template,
-            scrapeKey: identity,
+            scrape_key: identity,
             item_url: window.location.href,
             product_info: productInfo
         };
 
-        console.log('E-KUATO: 发送的数据:', sendData);
-        console.log('E-KUATO: API地址:', `${CONFIG.API_BASE_URL}/save_product_data`);
+        // console.log('E-KUATO: 发送的数据:', sendData);
+        // console.log('E-KUATO: API地址:', `${CONFIG.API_BASE_URL}/scrape`);
 
-        fetch(`${CONFIG.API_BASE_URL}/save_product_data`, {
+        fetch(`${CONFIG.API_BASE_URL}/scrape`, {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json'
@@ -1138,16 +1191,16 @@ class AliExpressCollector {
                 return response.json();
             })
             .then(data => {
-                console.log('E-KUATO: 服务器响应数据:', data);
+                // console.log('E-KUATO: 服务器响应数据:', data);
 
                 // 只在非自动模式下显示成功消息
                 if (!PageUtils.isAutoMode()) {
                     PageUtils.showMessage('商品抓取成功！', 'success');
                 }
-                console.log('E-KUATO: 抓取成功:', data);
+                // console.log('E-KUATO: 抓取成功:', data);
             })
             .catch(error => {
-                console.error('E-KUATO: 抓取失败:', error);
+                // console.error('E-KUATO: 抓取失败:', error);
 
                 let errorMessage = '抓取失败，请重试';
                 if (error.message.includes('Failed to fetch')) {
