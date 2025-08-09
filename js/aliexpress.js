@@ -59,7 +59,22 @@ const PageUtils = {
         return url.includes('open_mode=auto');
     },
     cleanPrice: function (priceText) {
-        return priceText.replace(/[$￥\s]/g, '').replace('US', '');
+        // 移除空格和US标识
+        let cleaned = priceText.replace(/[\s]/g, '').replace('US', '');
+        
+        // 检查是否包含两个$符号，说明是重复的价格文本
+        const dollarMatches = cleaned.match(/\$/g);
+        if (dollarMatches && dollarMatches.length >= 2) {
+            // 分割价格文本，取第一个价格
+            const parts = cleaned.split('$');
+            if (parts.length >= 3) {
+                // 格式可能是 "$price$price" 或 "prefix$price$price"
+                return parts[1]; // 取第一个价格数字部分
+            }
+        }
+        
+        // 正常情况下移除所有货币符号
+        return cleaned.replace(/[$￥]/g, '');
     },
     showMessage: function (message, type = 'info') {
         console.log('E-KUATO: 尝试显示消息:', message, '类型:', type);
@@ -722,18 +737,18 @@ class AliExpressCollector {
      */
     loadTemplateList() {
         $.ajax({
-            url: `${CONFIG.API_BASE_URL}/api/get_all_catalog`,
+            url: `${CONFIG.API_BASE_URL}/templates/?page=1&per_page=200`,
             method: "GET",
             success: async (data) => {
-                const options = data.result || [];
+                const options = data.data || [];
                 const selectElement = $('#ekuato-template');
 
                 selectElement.empty().append('<option value="">请选择模板</option>');
 
                 options.forEach(option => {
                     selectElement.append($('<option>', {
-                        value: option.catalog,
-                        text: option.catalog_title
+                        value: option.catelog_name,
+                        text: option.title
                     }));
                 });
 
@@ -929,21 +944,19 @@ class AliExpressCollector {
 
             console.log('E-KUATO: 配置项:', { timeRange, productRatingCheck, descriptionImageCheck });
 
-            // 检查配置项并给出相应提示
-            const configChecks = await this.checkCollectionConfig(timeRange, productRatingCheck, descriptionImageCheck);
-            if (!configChecks.canProceed) {
-                return;
-            }
-
             PageUtils.showMessage('正在抓取商品数据...', 'info');
-            console.log('E-KUATO: 开始抓取商品数据');
-
             try {
-                const productInfo = this.extractProductInfo();
-                console.log('E-KUATO: 提取的商品信息:', productInfo);
+                // 先抓取商品数据
+                const productInfo = await this.extractProductInfo();
+                
+                // 再检查配置项并给出相应提示
+                const configChecks = await this.checkCollectionConfig(timeRange, productRatingCheck, descriptionImageCheck);
+                if (!configChecks.canProceed) {
+                    return;
+                }
+                
                 this.sendProductData(selectedTemplate, selectedIdentity, productInfo);
             } catch (error) {
-                console.error('E-KUATO: 抓取失败:', error);
                 PageUtils.showMessage('抓取失败: ' + error.message, 'error');
             }
         } catch (error) {
@@ -1037,7 +1050,7 @@ class AliExpressCollector {
     /**
      * 提取商品信息
      */
-    extractProductInfo() {
+    async extractProductInfo() {
         const productInfo = {};
         // 售价
         let sellPriceText = $('span[class*="price-default--current--"]').text();
@@ -1080,8 +1093,8 @@ class AliExpressCollector {
         // 获取规格信息
         this.extractSpecifications(productInfo);
 
-        // 获取商品描述
-        this.extractProductDescription(productInfo);
+        // 获取商品描述（异步）
+        await this.extractProductDescription(productInfo);
 
         return productInfo;
     }
@@ -1143,7 +1156,28 @@ class AliExpressCollector {
     /**
      * 提取商品描述和详情图片
      */
-    extractProductDescription(productInfo) {
+    async extractProductDescription(productInfo) {
+        return new Promise((resolve) => {
+            // 点击Description标签确保页面加载完成
+            const descriptionTab = $('a[href="#nav-description"]');
+            if (descriptionTab.length > 0) {
+                console.log('E-KUATO: 点击Description标签');
+                descriptionTab[0].click();
+                
+                // 等待页面加载
+                setTimeout(() => {
+                    this.getProductDescriptionContent(productInfo);
+                    resolve();
+                }, 1000);
+            } else {
+                // 如果没有找到标签，直接获取内容
+                this.getProductDescriptionContent(productInfo);
+                resolve();
+            }
+        });
+    }
+
+    getProductDescriptionContent(productInfo) {
         const productDesc = $('div[class*="detail-desc-decorate-richtext"]');
         if (productDesc.length > 0) {
             productInfo.product_desc = productDesc.text().trim();
@@ -1156,6 +1190,7 @@ class AliExpressCollector {
             if (src) productDetailImages.push(src);
         });
         productInfo.product_desc_images = productDetailImages;
+        console.log('E-KUATO: 获取到商品描述图片数量:', productDetailImages.length);
     }
 
     /**
